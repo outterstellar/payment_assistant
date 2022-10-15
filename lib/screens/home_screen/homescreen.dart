@@ -17,6 +17,7 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+int howManyTimesYouTap = 1;
 String email = "";
 String password = "";
 int count = 0;
@@ -34,20 +35,18 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       endDrawer: Drawer(
-        child: 
-            SafeArea(
-              child: ListTile(
-                leading: Text("Account"),
-                onTap: () => Navigator.of(context).push(
-                    CupertinoPageRoute(builder: ((context) => AccountScreen()))),
-              ),
-            ),
-         
+        child: SafeArea(
+          child: ListTile(
+            leading: Text("Account"),
+            onTap: () => Navigator.of(context).push(
+                CupertinoPageRoute(builder: ((context) => AccountScreen()))),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(CupertinoPageRoute(builder: (context) => NewLendOrBorrow()));
+          Navigator.of(context).push(
+              CupertinoPageRoute(builder: (context) => NewLendOrBorrow()));
         },
         child: Text(
           "+",
@@ -66,6 +65,10 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: (pressed_button) {
+            howManyTimesYouTap++;
+            if ((howManyTimesYouTap % 6) == 0) {
+              myAd!.show();
+            }
             setState(
               () {
                 count = pressed_button;
@@ -116,9 +119,18 @@ void deleteCharacter({required BuildContext context}) {
       sharedPreferences!.setBool("remember", false);
       sharedPreferences!.setString("email", "");
       sharedPreferences!.setString("password", "");
-      Navigator.push(
+      Navigator.pushReplacement(
           context, CupertinoPageRoute(builder: (context) => LoginScreen()));
-    } else {}
+    } else {
+      Navigator.of(context).pop();
+      showCupertinoDialog(context: context, builder: (context)=>CupertinoAlertDialog(
+        content: Text("An Error Occured , Please Try Again Later."),
+        actions: [CupertinoButton(child: 
+        Text("Ok"), onPressed: (){
+          Navigator.of(context).pop();
+        })],
+      ));
+    }
   } catch (e) {}
 }
 

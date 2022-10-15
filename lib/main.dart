@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:paymentassistant/screens/home_screen/homescreen.dart';
 import 'package:paymentassistant/screens/log_in/loginscreen.dart';
 
@@ -11,7 +12,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'firebase_options.dart';
 import 'screens/about_situation/nointernet.dart';
-
 
 FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -28,8 +28,12 @@ void main() async {
     }
     SharedPreferences.getInstance().then((value) {
       sharedPreferences = value;
-      FlutterNativeSplash.remove();
-      runApp(MyApp());
+      MobileAds.instance.initialize().then((value) {
+        loadAds().then((value) {
+          FlutterNativeSplash.remove();
+          runApp(MyApp());
+        });
+      });
     });
   });
 }
@@ -44,16 +48,31 @@ class MyApp extends StatefulWidget {
 bool no_internet = false;
 
 class _MyAppState extends State<MyApp> {
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: no_internet == false
           ? sharedPreferences!.getBool("remember") != true
-          ? LoginScreen()
-          : HomeScreen()
+              ? LoginScreen()
+              : HomeScreen()
           : NoInternets(),
     );
   }
 }
+
+Future loadAds() {
+  return InterstitialAd.load(
+      adUnitId: "ca-app-pub-3940256099942544/8691691433",
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          myAd = ad;
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          print('InterstitialAd failed to load: $error');
+        },
+      ));
+}
+
+InterstitialAd? myAd;

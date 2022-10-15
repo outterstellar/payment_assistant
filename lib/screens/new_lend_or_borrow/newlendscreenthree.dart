@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:paymentassistant/main.dart';
 
 import '../../data/constants.dart';
 import '../../data/model.dart';
@@ -11,9 +14,8 @@ import '../log_in/loginscreen.dart';
 import 'newlendorborrow.dart';
 import 'newlendorborrowtwo.dart';
 
-
 TextEditingController commentcontroller = TextEditingController();
-
+bool adShown = false;
 class NewLendOrBorrow3 extends StatelessWidget {
   const NewLendOrBorrow3({Key? key}) : super(key: key);
   @override
@@ -22,9 +24,8 @@ class NewLendOrBorrow3 extends StatelessWidget {
       appBar: appbar,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
           if (count == 0) {
-            if(edited==true){
+            if (edited == true) {
               lends.removeAt(index2);
             }
             lends.add(Model(
@@ -34,7 +35,7 @@ class NewLendOrBorrow3 extends StatelessWidget {
             newlends = true;
             datas_first_come = false;
           } else {
-            if(edited==true){
+            if (edited == true) {
               borrows.removeAt(index2);
             }
             borrows.add(Model(
@@ -47,9 +48,15 @@ class NewLendOrBorrow3 extends StatelessWidget {
           namecontroller2.clear();
           amountcontroller.clear();
           commentcontroller.clear();
-
           Navigator.of(context)
               .push(CupertinoPageRoute(builder: (context) => HomeScreen()));
+          sleep(Duration(milliseconds: 5));
+          if (myAd != null) {
+            if(adShown == false){
+              adShown=true;
+              myAd!.show();
+            }
+          }
         },
         child: Icon(Icons.arrow_forward_ios),
       ),
@@ -109,7 +116,7 @@ double returnAmountFromString() {
     debugPrint("düzgün çalıştı beya");
   } catch (e) {
     List splitted = amount.split(",");
-    amount = splitted[0]+"."+splitted[1];
+    amount = splitted[0] + "." + splitted[1];
     asilamount = double.parse(amount);
     debugPrint("a" + asilamount.toString() + "a");
   }
