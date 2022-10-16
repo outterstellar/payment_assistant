@@ -28,6 +28,8 @@ void main() async {
     }
     SharedPreferences.getInstance().then((value) {
       sharedPreferences = value;
+                FlutterNativeSplash.remove();
+          runApp(MyApp());
       MobileAds.instance.initialize().then((value) {
         loadAds().then((value) {
           FlutterNativeSplash.remove();
@@ -63,7 +65,7 @@ class _MyAppState extends State<MyApp> {
 
 Future loadAds() {
   return InterstitialAd.load(
-      adUnitId: "ca-app-pub-3940256099942544/8691691433",
+      adUnitId: "ca-app-pub-2792914177928913/8917956287",
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {

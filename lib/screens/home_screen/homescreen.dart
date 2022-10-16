@@ -65,10 +65,11 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       bottomNavigationBar: BottomNavigationBar(
           onTap: (pressed_button) {
+            
             howManyTimesYouTap++;
-            if ((howManyTimesYouTap % 6) == 0) {
+             if ((howManyTimesYouTap % 6) == 0) {
               myAd!.show();
-            }
+            } 
             setState(
               () {
                 count = pressed_button;
